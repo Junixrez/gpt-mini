@@ -1,7 +1,0 @@
-{
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "env": {
-    "VITE_OPENAI_API_KEY": "@vite_openai_api_key"
-  }
-}
