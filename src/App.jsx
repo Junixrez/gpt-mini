@@ -3,9 +3,14 @@ import ModeSwitcher from "./components/ModeSwitcher";
 import ChatMode from "./components/ChatMode";
 import ImageMode from "./components/ImageMode";
 import CreativeMode from "./components/CreativeMode";
+import RAGMode from "./components/RAGMode";
 
 function App() {
   const [mode, setMode] = useState("chat");
+  // Persistent state for each mode
+  const [chatMessages, setChatMessages] = useState([]);
+  const [ragMessages, setRagMessages] = useState([]);
+  const [creativeContent, setCreativeContent] = useState("");
 
   return (
     <div className="flex flex-col h-screen bg-linear-to-br from-gray-50 to-gray-100 overflow-hidden">
@@ -33,6 +38,12 @@ function App() {
                     <span className="sm:hidden">🤖 Chat</span>
                   </>
                 )}
+                {mode === "rag" && (
+                  <>
+                    <span className="hidden sm:inline">📚 RAG System</span>
+                    <span className="sm:hidden">📚 RAG</span>
+                  </>
+                )}
                 {mode === "image" && (
                   <>
                     <span className="hidden sm:inline">🎨 DALL-E 3</span>
@@ -53,9 +64,19 @@ function App() {
       </header>
 
       <main className="flex-1 overflow-hidden relative">
-        {mode === "chat" && <ChatMode />}
+        {mode === "chat" && (
+          <ChatMode messages={chatMessages} setMessages={setChatMessages} />
+        )}
+        {mode === "rag" && (
+          <RAGMode messages={ragMessages} setMessages={setRagMessages} />
+        )}
         {mode === "image" && <ImageMode />}
-        {mode === "creative" && <CreativeMode />}
+        {mode === "creative" && (
+          <CreativeMode
+            content={creativeContent}
+            setContent={setCreativeContent}
+          />
+        )}
       </main>
     </div>
   );

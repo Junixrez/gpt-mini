@@ -3,9 +3,8 @@ import ReactMarkdown from "react-markdown";
 import { PenTool, Loader2 } from "lucide-react";
 import { generateResponse } from "../api";
 
-const CreativeMode = () => {
+const CreativeMode = ({ content, setContent }) => {
   const [prompt, setPrompt] = useState("");
-  const [content, setContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleCreate = async () => {

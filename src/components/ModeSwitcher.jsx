@@ -1,9 +1,10 @@
 import React from "react";
-import { MessageSquare, Image, PenTool } from "lucide-react";
+import { MessageSquare, Image, PenTool, Database } from "lucide-react";
 
 const ModeSwitcher = ({ currentMode, setMode }) => {
   const modes = [
     { id: "chat", label: "Chat", shortLabel: "Chat", icon: MessageSquare },
+    { id: "rag", label: "RAG (Documents)", shortLabel: "RAG", icon: Database },
     { id: "image", label: "Image Generator", shortLabel: "Image", icon: Image },
     {
       id: "creative",

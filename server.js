@@ -1,12 +1,33 @@
 import express from "express";
 import cors from "cors";
 import OpenAI from "openai";
-import dotenv from "dotenv";
+import { connectDB } from "./config/database.js";
+import ragRouter from "./api/rag.js";
+import ragChatRouter from "./api/ragChat.js";
 
-dotenv.config();
+// Load env variables using process.loadEnvFile (Node.js 20.12+) or dotenv
+try {
+  // Node.js 20.12+ has built-in .env loading
+  if (process.loadEnvFile) {
+    process.loadEnvFile();
+  } else {
+    await import("dotenv/config");
+  }
+} catch {
+  // Fallback: manually load .env without dotenv package noise
+  const fs = await import("fs");
+  const envContent = fs.readFileSync(".env", "utf8");
+  envContent.split("\n").forEach((line) => {
+    const match = line.match(/^([^=:#]+)=(.*)$/);
+    if (match) process.env[match[1].trim()] = match[2].trim();
+  });
+}
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+// Connect to MongoDB
+connectDB();
 
 // Initialize OpenAI client
 const client = new OpenAI({
@@ -16,6 +37,10 @@ const client = new OpenAI({
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// RAG Routes
+app.use("/api/rag", ragRouter);
+app.use("/api/rag-chat", ragChatRouter);
 
 // Chat completion endpoint
 app.post("/api/chat", async (req, res) => {

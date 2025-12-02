@@ -3,8 +3,7 @@ import ReactMarkdown from "react-markdown";
 import { Send } from "lucide-react";
 import { generateResponse } from "../api";
 
-const ChatMode = () => {
-  const [messages, setMessages] = useState([]);
+const ChatMode = ({ messages, setMessages }) => {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
