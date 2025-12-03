@@ -7,6 +7,7 @@ import Chunk from "../models/Chunk.js";
 import { extractTextFromFile, cleanText } from "../utils/fileProcessor.js";
 import { chunkText } from "../utils/chunking.js";
 import { generateEmbeddingsBatch } from "../utils/embeddings.js";
+import { sendFileToN8N } from "../services/n8nService.js";
 
 const router = express.Router();
 
@@ -76,6 +77,18 @@ router.post("/upload", upload.single("file"), async (req, res) => {
       chunkSize: parseInt(chunkSize),
       chunkOverlap: parseInt(chunkOverlap),
       status: "processing",
+    });
+
+    // Send file to n8n webhook (non-blocking)
+    sendFileToN8N({
+      filePath: req.file.path,
+      filename: req.file.originalname,
+      fileType: req.file.mimetype,
+      fileSize: req.file.size,
+      documentId: document._id.toString(),
+      uploadedBy: req.body.uploadedBy || "anonymous",
+    }).catch((error) => {
+      console.error("n8n webhook error (non-blocking):", error.message);
     });
 
     // Process file asynchronously
